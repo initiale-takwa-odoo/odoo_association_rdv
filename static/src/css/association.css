@@ -1,0 +1,252 @@
+/* Importation d'une typographie moderne et chaleureuse */
+
+
+
+:root {
+    --brand-teal: #134E5E;       /* Bleu-vert profond, rassurant et professionnel */
+    --brand-teal-light: #E6F2F5; /* Teinte claire associée */
+    --brand-coral: #E07A5F;      /* Corail doux, humain et chaleureux */
+    --brand-coral-hover: #C86247;
+    --brand-sand: #F9F7F3;       /* Fond crème élégant (remplace le blanc froid) */
+    --brand-ink: #1E293B;        /* Texte principal très lisible */
+    --brand-muted: #64748B;
+}
+
+/* Application de la typographie et du fond crème sur tout le site */
+#wrapwrap, #wrapwrap main, body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    background-color: var(--brand-sand) !important;
+    color: var(--brand-ink) !important;
+}
+
+/* ==========================================================================
+   1. PAGE D'ACCUEIL : DESIGN ÉDITORIAL & CHALEUREUX
+   ========================================================================== */
+.asso-hero-pro {
+    /* Voile bleu un peu plus soutenu par-dessus votre photo locale */
+    background: linear-gradient(
+        135deg, 
+        rgba(247, 250, 251, 0.88) 0%, 
+        rgba(22, 175, 251, 0.82) 100%
+    ), url('/odoo_association_rdv/static/src/img/hero_maman3.jpg') !important;
+    
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    
+    color: var(--brand-ink) !important;
+    padding: 110px 0 130px 0;
+    border-bottom-left-radius: 60px;
+    border-bottom-right-radius: 60px;
+    position: relative;
+    overflow: hidden;
+}
+
+.asso-hero-pro h1 {
+    font-weight: 800 !important;
+    letter-spacing: -0.02em;
+    color: var(--brand-teal) !important; /* Titre en bleu-vert profond */
+}
+
+.asso-hero-pro .lead {
+    color: #0F172A !important; /* Bleu nuit très foncé pour un contraste parfait */
+    font-weight: 500;
+}
+
+
+.asso-badge-pill {
+    background: #FFFFFF;
+    border: 1px solid #BAE6FD;
+    color: var(--brand-teal);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(19, 78, 94, 0.06);
+}
+
+
+/* Boutons signature */
+.btn-asso-coral {
+    background-color: var(--brand-coral) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 50px !important;
+    padding: 14px 32px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 10px 25px rgba(224, 122, 95, 0.35) !important;
+    transition: all 0.25s ease !important;
+}
+
+.btn-asso-coral:hover {
+    background-color: var(--brand-coral-hover) !important;
+    transform: translateY(-2px);
+}
+
+.btn-asso-glass {
+    background: #FFFFFF !important;
+    color: var(--brand-teal) !important;
+    border: 1px solid #BAE6FD !important;
+    border-radius: 50px !important;
+    padding: 14px 32px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(19, 78, 94, 0.06) !important;
+    transition: all 0.25s ease !important;
+}
+
+.btn-asso-glass:hover {
+    background-color: #2A9D8F !important; /* Devient vert au passage de la souris */
+    border-color: #2A9D8F !important;
+    color: #FFFFFF !important;            /* Texte en blanc bien lisible */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(42, 157, 143, 0.35) !important;
+}
+
+
+
+/* Cartes flottantes qui chevauchent la bannière */
+.asso-overlap-section {
+    margin-top: -65px;
+    position: relative;
+    z-index: 10;
+}
+
+.asso-feature-card {
+    background: linear-gradient(135deg, #134E5E 0%, #0F3D4C 100%) !important;
+    color: #FFFFFF !important;
+    border-radius: 24px !important;
+    padding: 32px 28px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.asso-feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 50px rgba(19, 78, 94, 0.30) !important;
+}
+
+.asso-feature-card h4 {
+    color: #FFFFFF !important;
+}
+
+.asso-feature-card p,
+.asso-feature-card .text-muted {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.asso-feature-card .asso-icon-box {
+    background-color: #FFFFFF !important;
+    color: #134E5E !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.asso-icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background-color: var(--brand-teal-light);
+    color: var(--brand-teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   2. PORTAIL CONNECTÉ : STYLE APPLICATION MODERNE (SAAS)
+   ========================================================================== */
+.portal-header-banner {
+    background: linear-gradient(135deg, #134E5E 0%, #1F6E8C 100%) !important;
+    color: #FFFFFF !important;
+    border-radius: 28px !important;
+    padding: 32px 36px !important;
+    box-shadow: 0 15px 35px rgba(19, 78, 94, 0.18) !important;
+}
+
+.portal-header-banner h2 {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+.portal-header-banner p {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Barre d'onglets moderne */
+#assoTabs {
+    background-color: #FFFFFF !important;
+    border-radius: 20px !important;
+    padding: 8px !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+}
+
+#assoTabs .nav-link {
+    border-radius: 14px !important;
+    color: var(--brand-muted) !important;
+    font-weight: 600 !important;
+    padding: 12px 20px !important;
+    transition: all 0.2s ease !important;
+}
+
+#assoTabs .nav-link.active {
+    background-color: var(--brand-teal) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 15px rgba(19, 78, 94, 0.25) !important;
+}
+
+/* Cartes du portail */
+.card {
+    border-radius: 22px !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04) !important;
+}
+
+.btn-primary {
+    background-color: var(--brand-teal) !important;
+    border-color: var(--brand-teal) !important;
+}
+
+.btn-success {
+    background-color: #2A9D8F !important;
+    border-color: #2A9D8F !important;
+}
+
+
+.asso-hero-img-wrapper {
+    position: relative;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 32px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.asso-hero-img {
+    border-radius: 24px;
+    object-fit: cover;
+    width: 100%;
+    height: 380px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.asso-floating-card {
+    position: absolute;
+    bottom: -18px;
+    left: -18px;
+    background: #FFFFFF;
+    padding: 14px 20px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
+}
+
+
+
+/* Amélioration visuelle des modales */
+.modal-content {
+    box-shadow: 0 25px 50px -12px rgba(19, 78, 94, 0.25) !important;
+}

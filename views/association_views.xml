@@ -1,0 +1,929 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ======================================================== -->
+    <!-- 🧒 II. LES VUES DES ENFANTS ET BÉNÉVOLES (association.beneficiary) -->
+    <!-- ======================================================== -->
+
+    <!-- 🧒 1. VUE LISTE ÉPURÉE POUR LES ENFANTS -->
+    <record id="view_association_beneficiary_list" model="ir.ui.view">
+        <field name="name">association.beneficiary.list</field>
+        <field name="model">association.beneficiary</field>
+        <field name="arch" type="xml">
+            <list string="Enfants Inscrits"  >
+                <!-- 📸 Petite vignette de l'avatar au tout début de la ligne -->
+                <field name="image_128" widget="image" options="{'size': [30, 30]}" class="rounded-circle mr-2" string="" width="35px"/>
+                <field name="name" string="Nom de famille de la Maman"  width="140px"/>
+                <field name="child_firstname" width="180px"/>
+                <field name="date_of_birth" width="180px"/>
+                <field name="age" class="text-center" options="{'header_class': 'text-center'}" width="140px"/>
+                <field name="association_category" widget="badge" decoration-info="association_category == 'maman'" decoration-warning="association_category == 'handicap'"/>
+                <!-- Dans view_association_beneficiary_list (juste avant </list>) : -->
+                <field name="registration_state" widget="badge" decoration-warning="registration_state == 'pending'" decoration-success="registration_state == 'approved'"/>
+            </list>
+        </field>
+    </record>
+
+<!-- 📋 VUE FORMULAIRE DE L'ENFANT / MAMAN -->
+    <record id="view_association_beneficiary_form" model="ir.ui.view">
+        <field name="name">association.beneficiary.form</field>
+        <field name="model">association.beneficiary</field>
+        <field name="arch" type="xml">
+            <form string="Fiche Enfant / Maman" class="o_sc_form">
+
+                <!-- pour ajouter les nouveau maman -->
+                <header>
+                    <button name="action_approve_and_create_portal_user" 
+                     string="✅ Valider l'inscription &amp; Créer l'accès Web" 
+                     type="object" 
+                     class="oe_highlight" 
+                     invisible="registration_state == 'approved' and user_id"/>
+                    <field name="registration_state" widget="statusbar" statusbar_visible="pending,approved"/>
+                </header>
+
+                <sheet class="shadow-sm border-0 rounded-3 p-4">
+                    <!-- 🛠️ Les champs techniques invisibles requis pour les conditions logiques -->
+                    <field name="late_loans_count" invisible="1"/>
+                    <field name="has_sensory_sensitivity" invisible="1"/>
+                    <field name="member_type" invisible="1"/>
+
+                    <!-- 🎀 Le ruban d'alerte sensorielle (S'affiche en haut à droite) -->
+                    <widget name="web_ribbon" title="Sensibilité Sensorielle 🎧" bg_color="text-bg-danger" invisible="not has_sensory_sensitivity"/>
+
+                    <!-- ⚠️ BANDEAU D'ALERTE DE RETARD LUDOTHÈQUE (Modifié avec la syntaxe v19) -->
+                    <div class="alert alert-fade alert-danger d-flex align-items-center gap-3 border-start border-danger border-4 shadow-sm mb-4" 
+                         role="alert" 
+                         invisible="late_loans_count == 0">
+                        <span class="fs-4">⚠️</span>
+                        <div class="flex-grow-1">
+                            <strong>Attention :</strong> Cette famille a <field name="late_loans_count" class="fw-bold text-danger"/> matériel(s) en retard de restitution !
+                        </div>
+                    </div>
+
+                    <!-- 🌟 BLOC EN-TÊTE : Design épuré et moderne -->
+                    <div class="row align-items-center mb-5 pb-4 border-bottom">
+                        <div class="col-auto">
+                            <!-- Avatar rond avec ombre légère -->
+                            <field name="image_128" widget="image" class="oe_avatar m-0 rounded-3 border p-1 bg-white shadow-sm" options="{'preview_image': 'image_128', 'size': [110, 110]}"/>
+                        </div>
+                        <div class="col">
+                            <div class="oe_title">
+                                <label for="name" class="text-uppercase small fw-semibold text-muted mb-1 d-block"/>
+                                <h1 class="display-6 fw-bold mb-2">
+                                    <field name="name" placeholder="Nom de famille de la Maman (ex: Dupont)" class="w-100 border-0 border-bottom bg-transparent py-1"/>
+                                </h1>
+                                <div class="d-flex align-items-center gap-2">
+                                    <field name="member_type" class="badge bg-light text-dark border px-3 py-2 fs-6 rounded-pill"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 👥 CONFIGURATION DES BLOCS -->
+                               <!-- 👥 CONFIGURATION DES BLOCS EN GRIDS BOOTSTRAP (Fini les colonnes brutes) -->
+                    <div class="row g-4 mb-5">
+                        <!-- Colonne Gauche : Identité -->
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 h-100 border-start border-primary border-3">
+                                <h5 class="fw-bold mb-3 text-primary"><i class="fa fa-child me-2"/>Identité Enfant/Parents</h5>
+                                <group class="o_label_nowrap m-0 border-0 p-0">
+                                    <field name="child_firstname" placeholder="Ex: Youssef, Inès..."/>
+                                    <field name="date_of_birth"/>
+                                    <field name="age"/>
+                                    <field name="default_avatar_type" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                            </div>
+                        </div>
+
+                        <!-- Colonne Droite : Coordonnées -->
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 h-100 border-start border-success border-3">
+                                <h5 class="fw-bold mb-3 text-success"><i class="fa fa-envelope me-2"/>Coordonnées/Suivi</h5>
+                                <group class="o_label_nowrap m-0 border-0 p-0">
+                                    <field name="phone" widget="phone"/>
+                                    <field name="email" widget="email"/>
+                                    <field name="user_id" placeholder="Associer un compte web" options="{'no_create': True}"/>
+                                    <field name="association_category"/>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 📓 LES ONGLETS DE SUIVI (Aérés) -->
+                    <notebook class="mt-4">
+                        <!-- 🧠 Onglet Profil Sensoriel -->
+                        <page string="Profil Sensoriel &amp; Besoins (TSA/TDAH)" name="tsa_info" class="pt-4">
+                            <div class="fade-in">
+                                <div class="p-3 bg-light border rounded-3 mb-4">
+                                    <group class="p-0 m-0">
+                                         <field name="has_sensory_sensitivity" widget="boolean_toggle"/>
+                                         <field name="interests_or_hyperfocus" placeholder="Ex: Les trains, les dinosaures..."/>
+                                         <field name="sponsor_id" options="{'no_create': True, 'no_open': True}"/>
+                                    </group>
+                                </div>
+                                <div>
+                                    <label for="association_notes" class="fw-bold text-muted mb-2"><i class="fa fa-sticky-note me-2"/>Notes d'accompagnement spécifiques</label>
+                                    <div class="w-100">
+                                       <field name="association_notes" placeholder="Notes d'accompagnement ou aménagements nécessaires (ex: s'isoler si surcharge)..." nolabel="1" class="form-control rounded-3 p-3 shadow-inner"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+
+                        <!-- 🤝 Onglet de Solidarité -->
+                        <page string="Solidarité &amp; Bénévolat 🤝" name="sponsored_families" class="pt-4">
+                            <!-- Mode Bénévole Actif -->
+                            <div invisible="member_type != 'volunteer'" class="fade-in">
+                                <div class="p-3 bg-light border rounded-3 mb-4">
+                                    <h5 class="fw-bold mb-3 text-dark"><i class="fa fa-handshake-o me-2"/>Profil et Rôle du Bénévole</h5>
+                                    <group class="p-0 m-0">
+                                        <field name="volunteer_specialty" required="member_type == 'volunteer'"/>
+                                        <field name="is_available_weekend" widget="boolean_toggle"/>
+                                    </group>
+                                </div>
+            
+                                <h5 class="fw-bold mb-3 text-muted px-1"><i class="fa fa-users me-2"/>Familles et enfants accompagnés</h5>
+                                <div class="table-responsive rounded-3 border">
+                                    <h5>---------------------</h5>
+                                    <field name="sponsored_member_ids" nolabel="1" readonly="1">
+                                        <list class="table-striped m-0">
+                                            <field name="name" string="Nom de la Maman" width="120px"/>
+                                            <field name="child_firstname" width="120px"/>
+                                            <field name="phone" width="140px"/>
+                                            <field name="age" string="Age de l'enfant" width="140px"/>
+                                            
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+
+                            <!-- Mode Maman Standard -->
+                            <div invisible="member_type == 'volunteer'" class="text-center p-5 my-3 bg-light rounded-3 border border-dashed">
+                                <span class="fs-1 d-block mb-3">🤍</span>
+                                <p class="text-muted fst-italic m-0 max-w-md mx-auto">
+                                    Cet espace affichera les informations de parrainage si cette maman décide de devenir bénévole pour l'association.
+                                </p>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!--======================================================== --> 
+    <!-- 📅 I. LES VUES DU TABLEAU DES RENDEZ-VOUS --> 
+    <!-- ======================================================== --> 
+    <!-- 1. Vue Liste (Tree/List) --> 
+    <record id="view_association_appointment_tree" model="ir.ui.view"> 
+       <field name="name">association.appointment.tree</field> 
+       <field name="model">association.appointment</field> 
+       <field name="arch" type="xml"> 
+            <list string="Rendez-vous" decoration-info="state == 'draft'" decoration-success="state == 'confirmed'" sample="1"> 
+                 <field name="date_start"/> 
+                 <field name="member_id"/>
+                 <field name="volunteer_id"/>
+                 <field name="name"/> 
+                 <field name="state" widget="badge" decoration-info="state == 'draft'" 
+                        decoration-success="state == 'confirmed'" 
+                        decoration-muted="state == 'done'" 
+                        decoration-danger="state == 'cancelled'"/> 
+            </list> 
+        </field> 
+    </record> 
+        
+        <!-- 📋 2. VUE FORMULAIRE DES RENDEZ-VOUS (OPTIMISÉE) -->
+    <record id="view_association_appointment_form" model="ir.ui.view">
+        <field name="name">association.appointment.form</field>
+        <field name="model">association.appointment</field>
+        <field name="arch" type="xml">
+            <form string="Rendez-vous" class="o_sc_form">
+                <header class="position-static">
+                    <!-- Remplacement des emojis par des classes de boutons et icônes natives -->
+                    <button name="action_confirm" string="Confirmer le RDV" type="object" class="btn-primary" invisible="state != 'draft'" icon="fa-check-circle"/>
+                    <button name="action_done" string="RDV Effectué" type="object" class="btn-success" invisible="state != 'confirmed'" icon="fa-calendar-check-o"/>
+                    <button name="action_cancel" string="Annuler" type="object" class="btn-link text-danger" invisible="state in ('done', 'cancelled')" icon="fa-times-circle"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet class="shadow-sm border-0 rounded-3 p-4">
+                    <!-- Titre moderne épuré -->
+                    <div class="oe_title mb-4">
+                        <label for="name" class="text-uppercase small fw-semibold text-muted mb-1 d-block" string="Motif du Rendez-vous"/>
+                        <h1 class="display-6 fw-bold"><field name="name" placeholder="Ex: Guidance parentale, Atelier Routines..." class="w-100 border-0 border-bottom bg-transparent py-1"/></h1>
+                    </div>
+
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100 border-start border-3 border-info">
+                                <h5 class="fw-bold mb-4 text-info"><i class="fa fa-users me-2"/>Intervenants</h5>
+                                <group class="o_label_nowrap m-0 border-0 p-0">
+                                    <field name="member_id" options="{'no_create': True, 'no_open': False}"/>
+                                    <field name="volunteer_id" options="{'no_create': True, 'no_open': False}"/>
+                                </group>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100 border-start border-3 border-success">
+                                <h5 class="fw-bold mb-4 text-success"><i class="fa fa-clock-o me-2"/>Plage Horaire / Rappels</h5>
+                                <group class="o_label_nowrap m-0 border-0 p-0">
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <field name="duration" widget="float_time" readonly="1" class="fw-bold"/>
+                                        <span class="text-muted small">(heures)</span>
+                                    </div>
+                                    <field name="is_reminder_sent" widget="boolean_toggle"/>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Widget Radio Horizontal stylisé -->
+                    <div class="p-3 bg-light rounded-3 mb-5 border-start border-3 border-primary">
+                        <label for="child_energy_level" class="fw-bold text-primary mb-2"><i class="fa fa-bolt me-2"/>État émotionnel / Niveau d'énergie de l'enfant</label>
+                        <div class="mt-2">
+                            <field name="child_energy_level" widget="radio" options="{'horizontal': true}"/>
+                        </div>
+                    </div>
+                    
+                    <notebook class="mt-4">
+                        <page string="Préparation Jour-J (TSA/TDAH)" name="sensory_prep" class="pt-4">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                     <!-- Le label reste en haut -->
+                                     <label for="specific_needs_this_day" class="fw-bold text-muted mb-2">
+                                     <i class="fa fa-heartbeat me-2"/>Besoins spécifiques signalés par la Maman
+                                     </label>
+                                      <!-- 🎯 En encapsulant le champ dans sa propre div sans 'form-control', 
+                                     Odoo v19 l'affiche correctement en dessous, sur toute la largeur -->
+                                    <div class="w-100">
+                                        <field name="specific_needs_this_day" 
+                                           placeholder="Ex: Enfant fatigué aujourd'hui, préparer un espace calme..." 
+                                           nolabel="1" 
+                                            class="rounded-3 p-3"/>
+                                     </div>
+                                </div>
+                            </div>
+                        </page>
+                        <page string="Compte-rendu de la séance 📝" name="summary_report" class="pt-4">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="summary_report" class="fw-bold text-muted mb-2"><i class="fa fa-file-text-o me-2"/>Résumé de ce qui a été accompli durant la séance</label>
+                                    <div class="w-100">
+                                        <field name="summary_report" placeholder="Rédigez le résumé ici..." nolabel="1" class="rounded-3 p-3"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+                        <page string="Notes secrètes (Bénévoles)" name="internal_notes" class="pt-4">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                   <label for="notes" class="fw-bold text-danger mb-2"><i class="fa fa-lock me-2"/>Notes confidentielles réservées aux intervenants</label>
+                                   <!-- 🎯 w-100 force le passage en dessous, et bg-light-danger donne un look alerte discret -->
+                                   <div class="w-100">
+                                    <field name="notes" placeholder="Ajoutez ici les détails importants de la séance..." nolabel="1" class="rounded-3 p-3 text-danger bg-light"/>
+                                   </div>
+                                </div>
+                            </div>
+                        </page> 
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- 📅 3. VUE CALENDRIER INTERACTIVE -->
+    <record id="view_association_appointment_calendar" model="ir.ui.view">
+        <field name="name">association.appointment.calendar</field>
+        <field name="model">association.appointment</field>
+        <field name="arch" type="xml">
+            <!-- 
+                - date_start et date_stop : Balises indispensables pour dessiner les blocs de temps
+                - color : Permet de donner une couleur différente par maman/enfant automatiquement
+                - mode="week" : Ouvre l'agenda directement sur la semaine en cours (plus lisible)
+                - event_limit="5" : Évite de surcharger l'écran s'il y a beaucoup d'ateliers le même jour
+            -->     
+            <calendar string="Agenda Solidaire" date_start="date_start" date_stop="date_end" color="child_energy_level" quick_create="false"  mode="week" event_limit="5">
+                <!-- Les champs qui vont s'afficher à l'intérieur de la petite carte du rendez-vous -->
+                <!-- 🌟 ICI : Odoo sait maintenant qu'il doit dessiner la vraie photo stockée dans image_128 ! -->
+                <field name="member_id" string="Famille / Enfant" avatar_field="image_128"/>
+                <field name="volunteer_id" string="Bénévole référent"/>
+                <field name="name" string="Motif / Atelier"/>
+                <!-- Filtre latéral automatique basé sur l'état émotionnel de l'enfant ou le statut -->
+                <field name="child_energy_level" filters="1"/>
+                <field name="state" filters="1"/>
+            </calendar>
+
+        </field>
+    </record>
+
+<!-- ================================================================-->
+<!-- 🎭 V. GESTION DES ATELIERS & ACTIVITÉS (association.activity)  -->
+<!-- ===============================================================-->
+
+    <!-- 1. VUE LISTE ATELIERS -->
+    <record id="view_association_activity_tree" model="ir.ui.view">
+        <field name="name">association.activity.list</field>
+        <field name="model">association.activity</field>
+        <field name="arch" type="xml">
+            <list string="Liste des Ateliers" sample="1">
+            <!-- Remplacement de font_weight (déprécié) par une classe Bootstrap propre à Odoo 19 -->
+            <field name="name" class="fw-bold" width="200px"/>
+            <field name="capacity" string="Places Max" class="text-center" width="100px"/>
+            <field name="beneficiary_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit_color': True}" string="Participants inscrits"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 2. VUE FORMULAIRE ATELIERS -->
+    <record id="view_association_activity_form" model="ir.ui.view">
+        <field name="name">association.activity.form</field>
+        <field name="model">association.activity</field>
+        <field name="arch" type="xml">
+            <form string="Atelier / Activité">
+                <sheet class="shadow-sm border-0 rounded-3 p-4">
+                    <div class="row align-items-center mb-5 pb-3 border-bottom">
+                        <div class="col">
+                            <div class="oe_title">
+                                <label for="name" class="text-uppercase small fw-semibold text-muted mb-1 d-block" string="Nom de l'atelier"/>
+                                <h1 class="display-6 fw-bold"><field name="name" placeholder="Ex: Groupe de parole Mamans, Éveil Sensoriel..." class="w-100 border-0 border-bottom bg-transparent py-1"/></h1>
+                            </div>
+                        </div>
+                        <!-- Capacité isolée à droite de manière graphique -->
+                        <div class="col-auto text-end">
+                            <div class="p-3 bg-light rounded-3 text-center border-top border-primary border-3 shadow-sm">
+                                <span class="small text-muted text-uppercase d-block fw-semibold mb-1">Capacité d'accueil</span>
+                                <h3 class="m-0 fw-bold text-primary">
+                                <field name="capacity" class="w-25 text-center bg-transparent border-0 d-inline-block"/> 
+                                <span class="fs-6 text-muted fw-normal">places</span></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="description" class="fw-bold text-muted mb-2"><i class="fa fa-info-circle me-2"/>Objectifs de l'atelier &amp; matériel à prévoir</label>
+                        <field name="description" placeholder="Décrivez le déroulement, le matériel nécessaire..." nolabel="1" class="form-control rounded-3 p-3"/>
+                    </div>
+                    
+                    <notebook class="mt-4">
+                        <page string="Familles Inscrites 🧒" name="participants" class="pt-4">
+                            <h5 class="fw-bold mb-4 text-muted"><i class="fa fa-child me-2"/>Liste des participants inscrits à cette session</h5>
+                            <div class="table-responsive rounded-3 border">
+                                <field name="beneficiary_ids" nolabel="1" placeholder="Ajouter des mamans/enfants à cet atelier...">
+                                    <!-- Inclusion d'une sous-vue liste épurée pour éviter le gros bloc m2m par défaut -->
+                                    <list string="Participants" editable="bottom">
+                                        <field name="name" string="Nom de famille"/>
+                                        <field name="child_firstname" string="Prénom Enfant"/>
+                                        <field name="phone"/>
+                                        <field name="association_category" widget="badge"/>
+                                    </list>
+                                </field>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ======================================================== -->
+    <!-- 🧸 VI. GESTION DE LA LUDOTHÈQUE (association.resource)  -->
+    <!-- ======================================================== -->
+
+    <!-- 1. Vue Liste (List View v17+) -->
+    <record id="view_association_resource_tree" model="ir.ui.view">
+        <field name="name">association.resource.list</field>
+        <field name="model">association.resource</field>
+        <field name="arch" type="xml">
+            <list string="Matériel Sensoriel &amp; Ludothèque" sample="1">
+                <field name="code" width="100" options="{'header_class': 'text-nowrap'}"/>
+                <field name="name"/>
+                <field name="category" widget="badge"/>
+                <field name="state" widget="badge" decoration-success="state == 'available'" decoration-warning="state == 'loaned'" decoration-danger="state == 'damaged'"/>
+                <field name="current_borrower_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 2. Vue Kanban (Catalogue visuel moderne) -->
+    <record id="view_association_resource_kanban" model="ir.ui.view">
+        <field name="name">association.resource.kanban</field>
+        <field name="model">association.resource</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" class="o_kanban_mobile">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="state"/>
+                <field name="current_borrower_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column h-100 justify-content-between">
+                            <div>
+                                <div class="d-flex align-items-start justify-content-between mb-2">
+                                    <strong class="fw-bold text-primary fs-5">
+                                        [<field name="code"/>] <field name="name"/>
+                                    </strong>
+                                    <field name="state" widget="label_selection" options="{'classes': {'available': 'success', 'loaned': 'warning'}}"/>
+                                </div>
+                                <div class="text-muted small mb-2">
+                                    <span class="badge bg-200 text-800"><field name="category"/></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Pied de carte : Avatar & Emprunteur -->
+                            <div class="border-top pt-2 mt-2" t-if="record.current_borrower_id.raw_value">
+                                <div class="d-flex align-items-center justify-content-between text-muted small">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img t-attf-src="/web/image/association.beneficiary/#{record.current_borrower_id.raw_value}/image_128" 
+                                             class="rounded-circle" 
+                                             alt="Avatar Famille" 
+                                             style="width: 24px; height: 24px; object-fit: cover;"/>
+                                        <span>Emprunté par : <strong><field name="current_borrower_id"/></strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- 3. Vue Formulaire Principale -->
+    <record id="view_association_resource_form" model="ir.ui.view">
+        <field name="name">association.resource.form</field>
+        <field name="model">association.resource</field>
+        <field name="arch" type="xml">
+            <form string="Matériel / Ressource">
+                <header class="position-static">
+                    <!-- 🛠️ CORRECTION : Le bouton masquer s'active si l'état est prêté OR si l'usure physique est abîmée (condition == 'damaged') -->
+                    <button name="action_open_loan_wizard" 
+                            string="Attribuer un prêt" 
+                            type="object" 
+                            class="btn-primary" 
+                            invisible="state == 'loaned' or condition == 'damaged'" 
+                            icon="fa-cube"/>
+                            
+                    <button name="action_return_resource" 
+                            string="Retour de matériel" 
+                            type="object" 
+                            class="btn-secondary" 
+                            invisible="state != 'loaned'" 
+                            icon="fa-undo"/>
+                            
+                    <field name="state" widget="statusbar" statusbar_visible="available,loaned,damaged"/>
+                </header>
+
+                
+                <sheet class="shadow-sm border-0 rounded-3 p-4">
+                    <!-- En-tête : Code & Désignation -->
+                    <div class="row align-items-center mb-5 pb-3 border-bottom">
+                        <div class="col-md-9">
+                            <label for="name" class="text-uppercase small small fw-semibold text-muted mb-1 d-block" string="Désignation du Matériel"/>
+                            <h1 class="display-6 fw-bold"><field name="name" placeholder="Ex: Casque anti-bruit Maman A..." class="w-100 border-0 border-bottom bg-transparent py-1"/></h1>
+                        </div>
+                        <div class="col-md-3 col-auto text-end">
+                            <div class="p-3 bg-light rounded-3 text-center border-top border-primary border-3 shadow-sm" style="min-width: 160px;">
+                                <span class="small text-muted text-uppercase d-block fw-semibold mb-1">N° Inventaire</span>
+                                <h3 class="m-0 fw-bold text-primary">
+                                    <field name="code" class="text-center bg-transparent border-0 d-inline-block w-100" readonly="1"/>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Blocs d'informations Suivi & Classification -->
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100 border-start border-3 border-primary">
+                                <h5 class="fw-bold mb-3 text-primary"><i class="fa fa-tags me-2"/>Classification</h5>
+                                <group class="o_label_nowrap m-0 border-0 p-0">
+                                    <field name="category"/>
+                                    <!-- 🆕 Ajout de l'état d'usure avec des pastilles colorées automatiques -->
+                                    <field name="condition"/>
+                                </group>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <!-- Bloc si le matériel est DISPONIBLE -->
+                            <div class="p-4 bg-light border-muted rounded-3 h-100 border-start border-3" invisible="state == 'loaned'">
+                                <h5 class="fw-bold mb-3 text-muted"><i class="fa fa-exchange me-2"/>Suivi de l'emplacement</h5>
+                                <div class="text-muted fst-italic pt-2">
+                                    <i class="fa fa-check-circle text-success me-1"/> Ce matériel est actuellement disponible dans les locaux.
+                                </div>
+
+                            </div>
+
+                            <!-- Bloc si le matériel est EMPRUNTÉ (Illumination Orange Bootstrap warning) -->
+                            <div class="p-4 rounded-3 h-100 border-start border-3 border-warning" invisible="state != 'loaned'" style="background-color: #fff3cd;">
+                                <h5 class="fw-bold mb-3 text-warning-dark"><i class="fa fa-exchange me-2"/>Suivi de l'emplacement</h5>
+                                <div class="d-flex align-items-center gap-2 m-0 border-0 p-0">
+                                    <span class="text-muted fs-5">Emprunteur actuel :</span>
+                                    <field name="borrower_image" widget="image" class="rounded-circle m-0" string="" readonly="1" style="width: 30px; height: 30px; object-fit: cover;"/>
+                                    <field name="current_borrower_id" readonly="1" options="{'no_open': False}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historique des prêts -->
+                    <notebook class="mt-4">
+                        <page string="Historique des prêts 📜" name="page_loan_history" class="pt-3">
+                            <h5 class="fw-bold mb-4 text-muted"><i class="fa fa-child me-2"/>Liste des mamans ayant emprunté cette ressource</h5>
+                            <field name="loan_history_ids" readonly="1">
+                                <list create="false" edit="false" delete="false" decoration-danger="is_late == True" class="table-striped m-0">
+                                    <field name="borrower_id"/>
+                                    <field name="loan_date"/>
+                                    <field name="due_date"/>
+                                    <field name="return_date" placeholder="⚠️ En cours d'emprunt"/>
+                                    <field name="is_late" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 4. Formulaire de l'Assistant (Wizard Pop-up) -->
+    <record id="view_association_resource_loan_wizard_form" model="ir.ui.view">
+        <field name="name">association.resource.loan.wizard.form</field>
+        <field name="model">association.resource.loan.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Attribuer le matériel à une maman">
+                <!-- 🛑 Bandeau ROUGE de sécurité dynamique v19 (S'affiche si l'objet choisi est déjà prêté) -->
+                <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" role="alert" invisible="not is_already_loaned">
+                    <i class="fa fa-exclamation-triangle fs-5"/>
+                    <div><strong>Action impossible :</strong> Cet article est déjà prêté et le flux est verrouillé.</div>
+                </div>
+
+                <!-- ℹ️ Info-bulle standard (S'affiche uniquement si l'objet est disponible) -->
+                <div class="alert alert-info d-flex align-items-center gap-2 mb-3" role="alert" invisible="is_already_loaned">
+                    <i class="fa fa-info-circle fs-5"/>
+                    <div>Sélectionnez la maman ou la famille qui emprunte cette ressource aujourd'hui.</div>
+                </div>
+
+                <group>
+                    <field name="is_already_loaned" invisible="1"/>
+                    <field name="resource_id" options="{'no_open': True}"/>
+        
+                     <!-- Affichage instantané du Statut et Catégorie à la sélection de l'article -->
+                     <field name="resource_category" widget="badge"/>
+                     <field name="resource_state" widget="badge" decoration-success="resource_state == 'available'" decoration-warning="resource_state == 'loaned'"/>
+        
+                    <!-- La sélection de la maman n'apparaît QUE si l'article est disponible -->
+                    <field name="borrower_id" options="{'no_create': True, 'no_open': True}" invisible="is_already_loaned" required="not is_already_loaned"/>
+                </group>
+
+                <footer>
+                    <!-- Le bouton de confirmation DISPARAÎT si l'article est déjà sorti -->
+                        <button string="Confirmer le prêt" name="action_confirm_loan" type="object" class="btn-primary" icon="fa-check" invisible="is_already_loaned"/>
+                        <button string="Fermer" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- 🔍 5. Vue de Recherche & Filtres (Search View v19) -->
+    <record id="view_association_resource_search" model="ir.ui.view">
+        <field name="name">association.resource.search</field>
+        <field name="model">association.resource</field>
+        <field name="arch" type="xml">
+            <search string="Recherche Matériel">
+                <!-- Champs sur lesquels l'utilisateur peut taper du texte libre -->
+                <field name="name" string="Nom du matériel"/>
+                <field name="code" string="N° Inventaire / Code"/>
+                <field name="current_borrower_id" string="Emprunteur"/>
+                <!-- Filtres rapides en 1 clic -->
+                <filter string="Disponibles 🟢" name="available" domain="[('state', '=', 'available')]"/>
+                <filter string="Actuellement Prêtés 📦" name="loaned" domain="[('state', '=', 'loaned')]"/>
+                <!-- 🆕 Le nouveau filtre de contrôle des retards (+14 jours dépassés) -->
+                <separator/>
+                <filter string="En Retard de Restitution ⏰" name="filter_is_late" domain="[('loan_history_ids.return_date', '=', False), ('loan_history_ids.due_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <!-- Filtres rapides de catégories -->
+                <separator/>
+                <filter string="Jouets d'éveil 🧸" name="cat_toy" domain="[('category', '=', 'toy')]"/>
+                <filter string="Matériel Sensoriel 🎧" name="cat_sensory" domain="[('category', '=', 'sensory')]"/>
+                <filter string="Livres et Guides 📚" name="cat_book" domain="[('category', '=', 'book')]"/>
+                <!-- Regroupements automatiques -->
+                <separator/>
+                <filter string="Statut" name="group_by_state" context="{'group_by': 'state'}"/>
+                <filter string="Catégorie" name="group_by_category" context="{'group_by': 'category'}"/>
+                <filter string="Matériel Abîmé ⚠️" name="cond_damaged" domain="[('condition', '=', 'damaged')]"/>
+                <filter string="État d'usure" name="group_by_condition" context="{'group_by': 'condition'}"/>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- ======================================================== -->
+    <!-- 💳 VII. SUIVI DES DONS & ADHÉSIONS (Optimisé)            -->
+    <!-- ======================================================== -->
+
+    <!-- 1. Vue Liste Contributions (Avec la somme et la déduction fiscale) -->
+    <record id="view_association_contribution_tree" model="ir.ui.view">
+        <field name="name">association.contribution.list</field>
+        <field name="model">association.contribution</field>
+        <field name="arch" type="xml">
+            <list string="Historique financier" sample="1">
+                <field name="date_payment" width="140px"/>
+                <field name="is_verified" widget="boolean_toggle" string="Encaissé" width="140px"/>
+                <field name="member_id" width="140px"/>
+                <field name="type" widget="badge" decoration-info="type == 'membership'" decoration-success="type == 'donation'" width="140px"/>
+                <field name="fiscal_receipt_number" placeholder="Non généré" width="120px"/>
+                <field name="amount" sum="Total des fonds reçus €" class="text-end" width="160px"/>
+                <field name="tax_deduction" sum="Total des déductions €" optional="show" class="text-end text-muted" width="180px"/>
+                
+            </list>
+        </field>
+    </record>
+
+    <!-- 2. Vue Formulaire Contributions (Avec Barre de Statut et Bouton Python) -->
+    <record id="view_association_contribution_form" model="ir.ui.view">
+        <field name="name">association.contribution.form</field>
+        <field name="model">association.contribution</field>
+        <field name="arch" type="xml">
+            <form string="Contribution Financière">
+                <!-- 🛠️ BARRE D'ACTION : Contient le bouton pour générer le reçu -->
+                <header>
+                    <button name="action_validate_and_generate_receipt" 
+                            string="Valider &amp; Générer le Reçu Fiscal" 
+                            type="object" 
+                            class="btn-primary" 
+                            invisible="is_verified == True or type != 'donation'"
+                            icon="fa-file-text-o"/>
+                    
+                    <button name="action_validate_and_generate_receipt" 
+                            string="Valider la Cotisation" 
+                            type="object" 
+                            class="btn-success" 
+                            invisible="is_verified == True or type == 'donation'"
+                            icon="fa-credit-card"/>
+                    <field name="is_verified" invisible="1"/>
+                </header>
+                <sheet class="shadow-sm border-0 rounded-3 p-4">
+                    <!-- Petit ruban vert si le don est validé -->
+                    <widget name="web_ribbon" title="Validé &amp; Encaissé ✅" bg_color="text-bg-success" invisible="is_verified == False"/>
+                    
+                    <div class="row align-items-center mb-5 pb-4 border-bottom">
+                        <div class="col">
+                            <div class="oe_title">
+                                <label for="member_id" class="text-uppercase small fw-semibold text-muted mb-1 d-block" string="Donateur / Adhérent"/>
+                                <h1 class="display-6 fw-bold"><field name="member_id" options="{'no_create': True}"/></h1>
+                            </div>
+                        </div>
+                        <!-- Affichage du montant de façon percutante à droite -->
+                        <div class="col-auto text-end">
+                            <div class="p-3 bg-light rounded-3 border-top border-3 border-success shadow-sm">
+                                <span class="small text-muted text-uppercase d-block fw-semibold mb-1">Montant Versé</span>
+                                <h2 class="m-0 fw-bold text-success"><field name="amount" readonly="is_verified == True" class="text-end"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100 border-start border-3 border-info">
+                                <h5 class="fw-bold mb-4 text-info"><i class="fa fa-money me-2"/>Détails du Paiement</h5>
+                                <group class="o_label_nowrap m-0 border-0 p-0">
+                                    <field name="type" widget="radio" options="{'horizontal': true}" readonly="is_verified == True"/>
+                                    <field name="date_payment" readonly="is_verified == True"/>
+                                </group>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100 border-start border-3 border-secondary">
+                                <h5 class="fw-bold mb-4 text-secondary"><i class="fa fa-calculator me-2"/>Impact Fiscal et Traitement</h5>
+                                <group class="o_label_nowrap m-0 border-0 p-0">
+                                    <field name="fiscal_receipt_number" readonly="1" placeholder="Généré automatiquement"/>
+                                    <field name="tax_deduction" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="type != 'donation'"/>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ======================================================== -->
+    <!-- 📓 IX. LE JOURNAL DE BORD DE L'ENFANT (association.child.log) -->
+    <!-- ======================================================== -->
+
+<!-- 1. Vue Liste (Tree/List) Optimisée -->
+    <record id="view_association_child_log_tree" model="ir.ui.view">
+        <field name="name">association.child.log.list</field>
+        <field name="model">association.child.log</field>
+        <field name="arch" type="xml">
+            <!-- L'attribut sample="1" affiche un exemple visuel propre si la liste est vide -->
+            <list string="Journaux de Bord" sample="1">
+                <field name="date"/>
+                <field name="beneficiary_id" string="Famille / Enfant"/>
+                <field name="sleep_quality" widget="badge" decoration-success="sleep_quality == 'good'" decoration-warning="sleep_quality == 'restless'" decoration-danger="sleep_quality == 'bad'"/>
+                <field name="global_anxiety" widget="badge" decoration-success="global_anxiety == 'low'" decoration-warning="global_anxiety == 'medium'" decoration-danger="global_anxiety == 'high'"/>
+                <!-- ⚡ Optimisation : Masqué par défaut pour garder un tableau propre, activable en un clic à droite -->
+                <field name="victory_notes" optional="hide"/>
+                <field name="challenge_notes" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 2. Vue Formulaire (Form) Validée -->
+    <record id="view_association_child_log_form" model="ir.ui.view">
+        <field name="name">association.child.log.form</field>
+        <field name="model">association.child.log</field>
+        <field name="arch" type="xml">
+            <form string="Note de Suivi Quotidien">
+                <sheet class="shadow-sm border-0 rounded-3 p-4">
+                    
+                    <!-- En-tête de la fiche de suivi -->
+                    <div class="row align-items-center mb-5 pb-3 border-bottom">
+                        <div class="col">
+                            <div class="oe_title">
+                                <label for="beneficiary_id" class="text-uppercase small fw-semibold text-muted mb-1 d-block" string="Suivi Évolutif de l'Enfant"/>
+                                <h1 class="display-6 fw-bold"><field name="beneficiary_id" options="{'no_create': True, 'no_open': False}" placeholder="Sélectionner l'enfant..."/></h1>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="p-2 bg-light rounded-3 text-center border shadow-sm">
+                                <field name="date" class="fw-bold border-0 bg-transparent text-center"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Indicateurs Neuro-Sensoriels en Cartes Floues/Grilles -->
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100 border-start border-3 border-info">
+                                <h5 class="fw-bold mb-3 text-info"><i class="fa fa-moon-o me-2"/>Qualité du Sommeil</h5>
+                                <div class="mt-3">
+                                    <field name="sleep_quality" widget="radio" options="{'horizontal': true}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100 border-start border-3 border-warning">
+                                <h5 class="fw-bold mb-3 text-warning"><i class="fa fa-heartbeat me-2"/>Niveau d'Anxiété Global</h5>
+                                <div class="mt-3">
+                                    <field name="global_anxiety" widget="radio" options="{'horizontal': true}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Onglets de Suivi Comportemental -->
+                    <notebook class="mt-4">
+                        <page string="Renforcement Positif &amp; Victoires 🎉" name="victories" class="pt-4">
+                            <div class="alert alert-success border-0 shadow-inner mb-3 p-3">
+                                <i class="fa fa-trophy me-2"/> <strong>L'approche positive :</strong> Notez ici les réussites, mêmes les plus petites ! C'est la clé de l'accompagnement d'un profil neuroatypique.
+                            </div>
+                            <field name="victory_notes" placeholder="Ex: A réussi à exprimer sa frustration avec des mots, belle interaction durant l'atelier..." nolabel="1" class="form-control rounded-3 p-3 text-success border-success-subtle"/>
+                        </page>
+                        <page string="Défis &amp; Surcharges Sensorielles 🧠" name="challenges" class="pt-4">
+                            <div class="alert alert-danger border-0 shadow-inner mb-3 p-3">
+                                <i class="fa fa-exclamation-triangle me-2"/> Décrivez les facteurs déclencheurs (bruit, imprévus) ou les surcharges pour adapter le prochain rendez-vous.
+                            </div>
+                            <field name="challenge_notes" placeholder="Ex: Surcharge sonore en fin d'après-midi, rigidité face au changement d'activité..." nolabel="1" class="form-control rounded-3 p-3 text-danger border-danger-subtle"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ======================================================== -->
+    <!-- 🎛️ VIII. LES ACTIONS DE FENÊTRE PERSONNALISÉES            -->
+    <!-- ======================================================== -->
+
+    <!-- Action pour ouvrir la liste des Enfants -->
+    <record id="action_association_beneficiary" model="ir.actions.act_window">
+        <field name="name">Enfants Inscrits / Mamans</field>
+        <field name="res_model">association.beneficiary</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('member_type', '=', 'beneficiary')]</field>
+        <field name="context">{'default_member_type': 'beneficiary'}</field>
+    </record>
+
+     <!-- Action pour ouvrir GESTION DES BÉNÉVOLES DE L'ASSOCIATION  -->          
+     <record id="action_association_volunteer" model="ir.actions.act_window">
+        <field name="name">Nos Bénévoles Solidaire</field>
+        <field name="res_model">association.beneficiary</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('member_type', '=', 'volunteer')]</field>
+        <field name="context">{'default_member_type': 'volunteer'}</field>
+    </record>
+
+    <!-- Action pour ouvrir la liste des Rendez-vous (Ouverture Agenda par défaut !) -->
+    <record id="action_association_appointment" model="ir.actions.act_window">
+        <field name="name">Gestion des Rendez-vous</field>
+        <field name="res_model">association.appointment</field>
+        <field name="view_mode">list,form,calendar</field> 
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Planifiez votre tout premier rendez-vous solidaire !
+            </p>
+        </field>
+    </record>
+
+    <!-- Action Dons / Cotisations -->
+    <record id="action_association_contribution" model="ir.actions.act_window">
+        <field name="name">Adhésions &amp; Dons Reçus</field>
+        <field name="res_model">association.contribution</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Action du Journal de Bord -->
+    <record id="action_association_child_log" model="ir.actions.act_window">
+        <field name="name">Suivi Comportemental &amp; Sommeil</field>
+        <field name="res_model">association.child.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez la première note du journal de bord !
+            </p>
+            <p>
+                Ce journal permettra aux mamans de suivre l'évolution sensorielle et comportementale de leur enfant atypique au jour le jour. [health]
+            </p>
+        </field>
+    </record>
+
+    <!-- Action pour les Ateliers (Ajoutée par sécurité si elle manquait) -->
+    <record id="action_association_activity" model="ir.actions.act_window">
+        <field name="name">Ateliers &amp; Groupes</field>
+        <field name="res_model">association.activity</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Action principale pour ouvrir le catalogue des articles -->
+    <record id="action_association_resource" model="ir.actions.act_window">
+        <field name="name">Catalogue des Articles</field>
+        <field name="res_model">association.resource</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez votre premier matériel ou ressource sensorielle !
+            </p>
+            <p>
+                Gérez facilement le stock de la ludothèque, suivez les attributions aux familles et éditez les fiches d'inventaire.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action spécifique pour lancer directement l'assistant (Wizard) depuis un menu -->
+    <record id="action_association_resource_loan_wizard" model="ir.actions.act_window">
+        <field name="name">Enregistrer un Prêt</field>
+        <field name="res_model">association.resource.loan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <!-- ======================================================== -->
+    <!-- 🎛️ IX. LES MENUS PRINCIPAUX RESTRUCTURÉS                  -->
+    <!-- ======================================================== -->
+
+    <!-- 0️⃣ LE MENU RACINE PRINCIPAL -->
+    <menuitem id="menu_association_root" 
+              name="Asso Solidaire 🏥" 
+              web_icon="base,images/modules/contacts.png"
+              sequence="10"/>
+
+    <!-- 🧒 SECTION 1 : ESPACE FAMILLES -->
+    <menuitem id="menu_group_families" name="🧒 Espace Familles" parent="menu_association_root" sequence="10"/>
+    <menuitem id="menu_association_beneficiary" name="👶 Enfants Inscrits" parent="menu_group_families" action="action_association_beneficiary" sequence="10"/>
+    <menuitem id="menu_association_child_log" name="📓 Journal de Bord" parent="menu_group_families" action="action_association_child_log" sequence="20"/>
+    <menuitem id="menu_association_activity" name="🎭 Ateliers &amp; Groupes" parent="menu_group_families" action="action_association_activity" sequence="30"/>
+
+    <!-- 📅 SECTION 2 : PLANIFICATION -->
+    <menuitem id="menu_group_planning" name="📅 Planification" parent="menu_association_root" sequence="20"/>
+    <menuitem id="menu_association_appointment" name="⏰ Prendre Rendez-vous" parent="menu_group_planning" action="action_association_appointment" sequence="10"/>
+    
+    <!-- 🤝 SECTION 3 : RESSOURCES & ÉQUIPE -->
+    <menuitem id="menu_group_resources" name="🤝 Ressources &amp; Équipe" parent="menu_association_root" sequence="30"/>
+    <menuitem id="menu_association_volunteer" name="🦺 Nos Bénévoles" parent="menu_group_resources" action="action_association_volunteer" sequence="10"/>
+    <menuitem id="menu_association_resource" name="🧸 Ludothèque" parent="menu_group_resources" action="action_association_resource" sequence="20"/>
+    <!-- Sous-menu : Gestion des stocks et articles -->
+    <menuitem id="menu_association_resource_catalog"
+              name="🗂️ Catalogue des Articles"
+              parent="menu_association_resource"
+              action="action_association_resource"
+              sequence="10"/>
+    <!-- Sous-menu : Raccourci rapide pour enregistrer une sortie -->
+    <menuitem id="menu_association_resource_loan_action"
+              name="📦 Enregistrer un Prêt"
+              parent="menu_association_resource"
+              action="action_association_resource_loan_wizard"
+              sequence="20"/>
+
+    <!-- 💳 SECTION 4 : FINANCES -->
+    <menuitem id="menu_group_finance" name="💳 Finances" parent="menu_association_root" sequence="40"/>
+    <menuitem id="menu_association_contribution" name="🎁 Dons &amp; Cotisations" parent="menu_group_finance" action="action_association_contribution" sequence="10"/>
+
+</odoo>

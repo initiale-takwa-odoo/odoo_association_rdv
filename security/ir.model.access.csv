@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_assoc_appointment_internal,access.association.appointment.internal,model_association_appointment,base.group_user,1,1,1,1
+access_assoc_beneficiary_internal,access.association.beneficiary.internal,model_association_beneficiary,base.group_user,1,1,1,1
+access_assoc_activity_internal,access.association.activity.internal,model_association_activity,base.group_user,1,1,1,1
+access_assoc_resource_internal,access.association.resource.internal,model_association_resource,base.group_user,1,1,1,1
+access_assoc_timesheet_internal,access.association.timesheet.internal,model_association_timesheet,base.group_user,1,1,1,1
+access_assoc_contribution_internal,access.association.contribution.internal,model_association_contribution,base.group_user,1,1,1,1
+access_assoc_child_log_internal,access.association.child.log,model_association_child_log,base.group_user,1,1,1,1
+access_assoc_res_loan_wiz_internal,access.association.resource.loan.wizard,model_association_resource_loan_wizard,base.group_user,1,1,1,1
+access_assoc_res_loan_hist_internal,access.association.resource.loan.history,model_association_resource_loan_history,base.group_user,1,1,1,1
+access_assoc_appointment_portal,access.association.appointment.portal,model_association_appointment,base.group_portal,1,1,1,0
+access_assoc_beneficiary_portal,access.association.beneficiary.portal,model_association_beneficiary,base.group_portal,1,0,0,0
+

@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ======================================================== -->
+    <!-- 1. PAGE D'ACCUEIL DE L'ASSOCIATION                       -->
+    <!-- ======================================================== -->
+    <template id="association_home_page" name="Accueil Association Solidaire">
+    <t t-set="no_header" t-value="True"/>
+    <t t-set="no_footer" t-value="True"/> <!-- Optionnel : enlève aussi le pied de page -->
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                
+                <!-- 1. BANNIÈRE PRINCIPALE BLEU PÉTROLE -->
+                <section class="asso-hero-pro text-center">
+    <div class="container position-relative" style="z-index: 2;">
+        <span class="asso-badge-pill">
+            <i class="fa fa-heart me-2"/>Association d'entraide &amp; neuroatypie
+        </span>
+        <h1 class="display-4 mb-4">
+            Espace Maman &amp; Enfant
+        </h1>
+        <p class="lead mx-auto mb-5" style="max-width: 680px;">
+            <t t-esc="message"/>
+        </p>
+
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="/inscription-association" class="btn btn-asso-coral">
+                Rejoindre l'Association <i class="fa fa-arrow-right ms-2"/>
+            </a>
+            <a href="/my/appointments" class="btn btn-asso-glass">
+                <i class="fa fa-lock me-2"/>Mon Espace Sécurisé
+            </a>
+        </div>
+    </div>
+</section>
+
+
+
+                <!-- 2. CARTES FLOTTANTES EN CHEVAUCHEMENT -->
+                <section class="container asso-overlap-section mb-5">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="asso-feature-card h-100">
+                                <div class="asso-icon-box"><i class="fa fa-handshake-o"/></div>
+                                <h4 class="fw-bold mb-2">Écoute &amp; Parrainage</h4>
+                                <p class="text-muted mb-0">Chaque famille est reliée à une marraine ou un bénévole dédié pour un soutien humain, sans jugement.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="asso-feature-card h-100">
+                                <div class="asso-icon-box" style="background-color: #FDF0EC; color: #E07A5F;"><i class="fa fa-paint-brush"/></div>
+                                <h4 class="fw-bold mb-2">Ateliers Sensoriels</h4>
+                                <p class="text-muted mb-0">Des groupes en effectif réduit pensés pour respecter les sensibilités et le rythme de chaque enfant.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="asso-feature-card h-100">
+                                <div class="asso-icon-box" style="background-color: #ECFDF5; color: #2A9D8F;"><i class="fa fa-puzzle-piece"/></div>
+                                <h4 class="fw-bold mb-2">Ludothèque Adaptée</h4>
+                                <p class="text-muted mb-0">Accédez gratuitement à notre catalogue de casques anti-bruit, jeux éducatifs et matériel sensoriel.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. SECTION PARCOURS EN 3 ÉTAPES -->
+                <section class="container py-5 my-3">
+                    <div class="text-center mb-5">
+                        <span class="text-uppercase fw-bold small" style="color: #E07A5F; letter-spacing: 0.08em;">Un accompagnement simple</span>
+                        <h2 class="fw-bold mt-2">Comment rejoindre notre communauté ?</h2>
+                    </div>
+
+                    <div class="row g-4 text-center">
+                        <div class="col-md-4">
+                            <div class="p-4">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-4 mb-3 text-white" style="width: 54px; height: 54px; background-color: #134E5E;">1</div>
+                                <h5 class="fw-bold">Demande en ligne</h5>
+                                <p class="text-muted small">Remplissez le formulaire d'inscription en 2 minutes avec les besoins de votre enfant.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-4">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-4 mb-3 text-white" style="width: 54px; height: 54px; background-color: #2A9D8F;">2</div>
+                                <h5 class="fw-bold">Premier échange</h5>
+                                <p class="text-muted small">Un bénévole valide votre dossier et vous ouvre votre accès privé au portail famille.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-4">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-4 mb-3 text-white" style="width: 54px; height: 54px; background-color: #E07A5F;">3</div>
+                                <h5 class="fw-bold">Suivi &amp; Ateliers</h5>
+                                <p class="text-muted small">Planifiez vos séances, tenez le journal de bord et réservez vos jeux en ligne.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </t>
+    </template>
+
+
+    <!-- ======================================================== -->
+    <!-- 2. FORMULAIRE D'INSCRIPTION                              -->
+    <!-- ======================================================== -->
+    <template id="association_registration_template" name="Inscription Association">
+        <t t-call="website.layout">
+            <div class="container my-5" style="max-width: 620px;">
+                <div class="card border-0 shadow rounded-4 p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold text-dark">📝 Demande d'Inscription</h2>
+                        <p class="text-muted">Rejoignez notre communauté d'entraide. Un bénévole étudiera votre demande.</p>
+                    </div>
+
+                    <form action="/inscription-association/submit" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nom de la Maman *</label>
+                                <input type="text" name="name" class="form-control form-control-lg rounded-3" required="required" placeholder="Ex: Dupont"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Prénom de l'enfant *</label>
+                                <input type="text" name="child_firstname" class="form-control form-control-lg rounded-3" required="required" placeholder="Ex: Youssef"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Date de naissance de l'enfant</label>
+                                <input type="date" name="date_of_birth" class="form-control form-control-lg rounded-3"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">L'enfant est un(e) :</label>
+                                   <select name="default_avatar_type" class="form-select form-select-lg rounded-3">
+                                   <option value="boy">Garçon 👦</option>
+                                   <option value="girl">Fille 👧</option>
+                                   <option value="neutral">Non précisé 🌟</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Téléphone *</label>
+                                <input type="tel" name="phone" class="form-control form-control-lg rounded-3" required="required" placeholder="Ex: 06 01 02 03 04"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Adresse Email</label>
+                                <input type="email" name="email" class="form-control form-control-lg rounded-3" placeholder="maman@email.com"/>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Besoins ou parcours de l'enfant</label>
+                                <textarea name="association_notes" class="form-control rounded-3" rows="4" placeholder="Ex: Diagnostic TSA en cours, hypersensibilité sonore..."></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill mt-4 fw-bold shadow-sm">
+                            Envoyer ma demande d'adhésion ✨
+                        </button>
+
+                        <div class="text-center mt-4 pt-3 border-top">
+                            <a href="/web/login" class="text-decoration-none text-muted small">
+                                Déjà membre de l'association ? <strong class="text-primary">Se connecter ici 🔐</strong>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ======================================================== -->
+    <!-- 3. PAGE DE SUCCÈS INSCRIPTION                            -->
+    <!-- ======================================================== -->
+    <template id="registration_success_template" name="Inscription Réussie">
+        <t t-call="website.layout">
+            <div class="container my-5 py-4 text-center" style="max-width: 600px;">
+                <div class="p-5 rounded-4 bg-success-subtle border border-success-subtle shadow-sm">
+                    <span class="display-2 d-block mb-3">💌</span>
+                    <h2 class="fw-bold text-success-emphasis mb-3">Demande bien reçue !</h2>
+                    <p class="lead text-dark mb-4">
+                        Merci pour votre confiance. Votre fiche de suivi a été pré-créée. Un bénévole ou une marraine prendra contact avec vous très rapidement.
+                    </p>
+                    <a href="/mon-association" class="btn btn-success rounded-pill px-4 py-2 fw-bold">
+                        Retour à l'accueil
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ======================================================== -->
+    <!-- 4. TABLEAU DE BORD PORTAIL (DÉBUT)                       -->
+    <!-- ======================================================== -->
+    <template id="portal_my_appointments_template" name="Mes Rendez-vous Portail">
+        <t t-call="portal.portal_layout">
+            <div class="container my-4">
+
+                <!-- EN-TÊTE & RÔLES -->
+                <!-- EN-TÊTE DU PORTAIL HARMONISÉ -->
+                <div class="portal-header-banner mb-4">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <div>
+                               <div class="d-flex align-items-center gap-2 mb-1">
+                               <h2 class="mb-0">
+                                Bonjour, <span t-esc="beneficiary.name if beneficiary else request.env.user.name"/> 👋
+                               </h2>
+                               <span t-if="is_mother" class="badge rounded-pill bg-white text-dark">Espace Famille</span>
+                               <span t-if="is_volunteer" class="badge rounded-pill bg-warning text-dark">Espace Bénévole 🤝</span>
+                            </div>
+                            <p class="mb-0">Retrouvez tout le suivi de votre enfant, vos séances et vos ressources.</p>
+                        </div>
+
+                        <div class="d-flex gap-2 flex-wrap">
+                        <button t-if="is_mother" type="button" class="btn btn-asso-coral" data-bs-toggle="modal" data-bs-target="#modalRequestRdv">
+                         📅 Demander un RDV
+                        </button>
+                        <button t-if="is_volunteer" type="button" class="btn btn-asso-glass" data-bs-toggle="modal" data-bs-target="#modalTimesheet">
+                         ⏱️ Déclarer mes heures
+                        </button>
+                        </div>
+                </div>
+            </div>
+
+
+                <!-- BARRE D'ONGLETS -->
+                <ul class="nav nav-pills nav-fill gap-2 p-2 bg-light rounded-pill mb-4 shadow-sm" id="assoTabs" role="tablist">
+                    <li class="nav-item">
+                        <button t-attf-class="nav-link rounded-pill fw-bold #{active_tab == 'planning' and 'active' or ''}" data-bs-toggle="tab" data-bs-target="#tab-planning" type="button">
+                            <i class="fa fa-calendar me-2"/> Planification &amp; RDV
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button t-attf-class="nav-link rounded-pill fw-bold #{active_tab == 'famille' and 'active' or ''}" data-bs-toggle="tab" data-bs-target="#tab-famille" type="button">
+                            <i class="fa fa-child me-2"/> Famille, Journal &amp; Ateliers
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button t-attf-class="nav-link rounded-pill fw-bold #{active_tab == 'ludotheque' and 'active' or ''}" data-bs-toggle="tab" data-bs-target="#tab-ludotheque" type="button">
+                            <i class="fa fa-cubes me-2"/> Ludothèque
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button t-attf-class="nav-link rounded-pill fw-bold #{active_tab == 'finance' and 'active' or ''}" data-bs-toggle="tab" data-bs-target="#tab-finance" type="button">
+                            <i class="fa fa-credit-card me-2"/> Cotisations &amp; Dons
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+
+                    <!-- ========================================== -->
+                    <!-- ONGLET 1 : PLANIFICATION                   -->
+                    <!-- ========================================== -->
+                    <div t-attf-class="tab-pane fade #{active_tab == 'planning' and 'show active' or ''}" id="tab-planning">
+                        
+                        <!-- ESPACE BÉNÉVOLE : Permanences & Feuilles de temps -->
+                        <t t-if="is_volunteer">
+                            <div class="card border-success border-opacity-25 shadow-sm rounded-4 p-4 mb-4 bg-success-subtle">
+                                <h5 class="fw-bold text-success-emphasis mb-3">🤝 Mes accompagnements (Espace Bénévole)</h5>
+                                <div class="row g-3">
+                                    <t t-foreach="volunteer_appointments" t-as="v_app">
+                                        <div class="col-md-6">
+                                            <div class="bg-white p-3 rounded-3 shadow-sm">
+                                                <div class="d-flex justify-content-between">
+                                                    <strong><span t-esc="v_app.name"/></strong>
+                                                    <span class="badge bg-light text-dark"><span t-field="v_app.date_start" t-options='{"widget": "datetime", "format": "dd/MM HH:mm"}'/></span>
+                                                </div>
+                                                <small class="text-muted d-block">Famille : <span t-esc="v_app.member_id.name"/> (Enfant : <span t-esc="v_app.member_id.child_firstname"/>)</small>
+                                                <p t-if="v_app.specific_needs_this_day" class="small text-warning-emphasis bg-warning-subtle p-2 rounded mt-2 mb-0">
+                                                    ⚠️ Besoins du jour : <span t-esc="v_app.specific_needs_this_day"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- LISTE DES RDV DE LA MAMAN -->
+                        <h5 class="fw-bold mb-3">Mes rendez-vous</h5>
+                        <div class="row g-4">
+                            <t t-foreach="appointments" t-as="app">
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                                        <div class="card-header bg-light py-3 d-flex justify-content-between">
+                                            <strong>📅 <span t-field="app.date_start" t-options='{"widget": "datetime", "format": "dd MMM yyyy à HH:mm"}'/></strong>
+                                            <span class="badge bg-secondary-subtle text-dark"><span t-esc="app.duration"/>h</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="fw-bold"><span t-esc="app.name"/></h5>
+                                            <p class="small text-muted mb-2">🤝 Bénévole : <strong><span t-esc="app.volunteer_id.name or 'En attribution'"/></strong></p>
+                                            <span class="badge bg-info-subtle text-info-emphasis rounded-pill mb-2">
+                                                <span t-field="app.child_energy_level"/>
+                                            </span>
+                                            <!-- Compte-rendu rédigé par le bénévole après la séance -->
+                                            <div t-if="app.summary_report" class="mt-2 p-2 bg-light rounded-3 small">
+                                                <strong>📝 Bilan de séance :</strong><br/>
+                                                <span t-esc="app.summary_report"/>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-warning-subtle text-warning-emphasis"><span t-field="app.state"/></span>
+                                            <a t-if="app.state in ['draft', 'confirmed']" t-attf-href="/my/appointment/cancel/#{app.id}" class="text-danger small text-decoration-none">Annuler</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- ONGLET 2 : FAMILLE, JOURNAL & ATELIERS     -->
+                    <!-- ========================================== -->
+                    <div t-attf-class="tab-pane fade #{active_tab == 'famille' and 'show active' or ''}" id="tab-famille">
+                        <div class="row g-4">
+                            <!-- Colonne Gauche : Fiche Enfant + Ateliers -->
+                            <div class="col-md-5">
+                                <div t-if="beneficiary" class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                                    <div class="d-flex align-items-center gap-3 mb-3">
+                                        <img t-if="beneficiary.image_128" t-att-src="image_data_uri(beneficiary.image_128)" class="rounded-circle shadow-sm" style="width: 60px; height: 60px; object-fit: cover;"/>
+                                        <div>
+                                            <h4 class="fw-bold text-primary mb-0"><span t-esc="beneficiary.child_firstname or beneficiary.name"/></h4>
+                                            <small class="text-muted"><span t-esc="beneficiary.age"/> ans</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <span t-if="beneficiary.has_sensory_sensitivity" class="badge bg-warning-subtle text-warning-emphasis rounded-pill">🎧 Sensibilité sensorielle</span>
+                                        <span t-if="beneficiary.interests_or_hyperfocus" class="badge bg-info-subtle text-info-emphasis rounded-pill">🌟 <span t-esc="beneficiary.interests_or_hyperfocus"/></span>
+                                    </div>
+                                    <div class="p-2 bg-light rounded-3 small">
+                                        🤍 Marraine dédiée : <strong><span t-esc="beneficiary.sponsor_id.name or 'En attribution'"/></strong>
+                                        
+                                    </div>
+                                    <!-- À placer juste en dessous du bloc "Marraine dédiée" dans #tab-famille -->
+                                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill w-100 mt-3 fw-bold" data-bs-toggle="modal" data-bs-target="#modalUpdateProfile">
+                                    ✏️ Compléter / Modifier le profil de mon enfant
+                                    </button>
+
+                                </div>
+
+                                <div class="card border-0 shadow-sm rounded-4 p-4">
+                                    <h5 class="fw-bold mb-3">🎨 Ateliers &amp; Groupes</h5>
+                                    <t t-foreach="workshops" t-as="ws">
+                                        <div class="border-bottom pb-3 mb-3">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <strong class="d-block"><span t-esc="ws.name"/></strong>
+                                                    <small class="text-muted d-block"><span t-esc="ws.description"/></small>
+                                                    <span class="badge bg-light text-dark mt-1">
+                                                        Places : <span t-esc="len(ws.beneficiary_ids)"/> / <span t-esc="ws.capacity"/>
+                                                    </span>
+                                                </div>
+                                                <t t-if="beneficiary in ws.beneficiary_ids">
+                                                    <span class="badge bg-success rounded-pill">Inscrit ✅</span>
+                                                </t>
+                                                <t t-elif="len(ws.beneficiary_ids) &lt; ws.capacity">
+                                                    <a t-attf-href="/my/workshop/join/#{ws.id}" class="btn btn-sm btn-outline-primary rounded-pill">S'inscrire</a>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="badge bg-secondary rounded-pill">Complet</span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <div class="col-md-7">
+                                <div class="card border-0 shadow-sm rounded-4 p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="fw-bold mb-0">📖 Journal de Bord de l'enfant</h5>
+                                        <button type="button" class="btn btn-sm btn-primary rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#modalJournal">
+                                            ➕ Nouvelle entrée
+                                        </button>
+                                    </div>
+                                    <t t-foreach="journal_entries" t-as="log">
+                                        <div class="p-3 bg-light rounded-4 mb-3 border-start border-4 border-primary">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <strong>📅 <span t-field="log.date"/></strong>
+                                                <div class="d-flex gap-1">
+                                                    <span class="badge bg-white text-dark border"><span t-field="log.sleep_quality"/></span>
+                                                    <span class="badge bg-white text-dark border"><span t-field="log.global_anxiety"/></span>
+                                                </div>
+                                            </div>
+                                            <p t-if="log.victory_notes" class="small text-success-emphasis mb-1">
+                                                <strong>🎉 Victoires :</strong> <span t-esc="log.victory_notes"/>
+                                            </p>
+                                            <p t-if="log.challenge_notes" class="small text-muted mb-0">
+                                                <strong>🧠 Difficultés :</strong> <span t-esc="log.challenge_notes"/>
+                                            </p>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- ========================================== -->
+                    <!-- ONGLET 3 : LUDOTHÈQUE & MATÉRIEL SENSORIEL -->
+                    <!-- ========================================== -->
+                     <div t-attf-class="tab-pane fade #{active_tab == 'ludotheque' and 'show active' or ''}" id="tab-ludotheque">
+                        <div t-if="late_loans_count > 0" class="alert alert-danger rounded-4 shadow-sm mb-4">
+                            ⚠️ Attention : vous avez <strong><span t-esc="late_loans_count"/> matériel(s)</strong> dont la date de retour est dépassée.
+                        </div>
+
+                        <div t-if="loan_history" class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                            <h5 class="fw-bold mb-3">📦 Mes emprunts ludothèque</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Code &amp; Matériel</th>
+                                            <th>Date d'emprunt</th>
+                                            <th>Retour prévu</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="loan_history" t-as="loan">
+                                            <tr>
+                                                <td class="fw-bold"><span t-esc="loan.resource_id.display_name"/></td>
+                                                <td><span t-field="loan.loan_date"/></td>
+                                                <td><span t-field="loan.due_date"/></td>
+                                                <td>
+                                                    <span t-if="loan.return_date" class="badge bg-success-subtle text-success-emphasis">Rendu le <span t-field="loan.return_date"/></span>
+                                                    <span t-else="" class="badge portal-header-banner text-primary-emphasis">En prêt</span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">🧸 Catalogue du Matériel Sensoriel &amp; Éducatif</h5>
+                            <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
+                                <span t-esc="len(toys)"/> articles au catalogue
+                            </span>
+                        </div>
+
+                        <div class="row g-4">
+                            <t t-foreach="toys" t-as="toy">
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4 d-flex flex-column">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-secondary-subtle text-dark font-monospace">
+                                                <span t-esc="toy.code or 'SANS-CODE'"/>
+                                            </span>
+                                            <span class="badge bg-info-subtle text-info-emphasis rounded-pill">
+                                                <span t-field="toy.category"/>
+                                            </span>
+                                        </div>
+
+                                        <h5 class="fw-bold text-dark mt-1 mb-2">
+                                            <span t-esc="toy.name"/>
+                                        </h5>
+
+                                        <p class="small text-muted mb-3">
+                                            État : <strong><span t-field="toy.condition"/></strong>
+                                        </p>
+
+                                        <div t-if="toy.state == 'loaned' and is_volunteer" class="p-2 bg-light rounded-3 small mb-3">
+                                            👤 Emprunté par : <strong><span t-esc="toy.current_borrower_id.name"/></strong>
+                                            <span t-if="toy.is_current_loan_late" class="badge bg-danger ms-1">En retard</span>
+                                        </div>
+
+                                        <div class="mt-auto pt-2 border-top">
+                                            <t t-if="toy.state == 'available'">
+                                                <a t-attf-href="/my/ludotheque/borrow/#{toy.id}" class="btn btn-success btn-sm rounded-pill w-100 fw-bold">
+                                                    🟢 Emprunter ce matériel
+                                                </a>
+                                            </t>
+                                            <t t-elif="toy.state == 'loaned' and is_volunteer">
+                                                <a t-attf-href="/my/ludotheque/return/#{toy.id}" class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-bold">
+                                                    ↩️ Valider le retour (Bénévole)
+                                                </a>
+                                            </t>
+                                            <t t-else="">
+                                                <button class="btn btn-secondary btn-sm rounded-pill w-100" disabled="disabled">
+                                                    📦 Actuellement prêté
+                                                </button>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- ONGLET 4 : FINANCES (COTISATIONS & DONS) -->
+                    <div class="tab-pane fade" id="tab-finance">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="card border-0 shadow-sm rounded-4 p-4">
+                                    <h5 class="fw-bold mb-3">🪪 Statut Adhésion</h5>
+                                    <t t-if="membership_active">
+                                        <div class="alert alert-success rounded-3 mb-0">
+                                            <strong>✅ Cotisation à jour</strong><br/>
+                                            <small>Votre adhésion annuelle est validée.</small>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="alert alert-warning rounded-3 mb-0">
+                                            <strong>⚠️ En attente de cotisation</strong><br/>
+                                            <small>Rapprochez-vous d'un bénévole lors de votre prochaine visite.</small>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <div class="card border-0 shadow-sm rounded-4 p-4">
+                                    <h5 class="fw-bold mb-3">💝 Historique des Cotisations &amp; Dons</h5>
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Montant</th>
+                                                <th>Déduction (66%)</th>
+                                                <th>Reçu Fiscal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="contributions" t-as="contrib">
+                                                <tr>
+                                                    <td><span t-field="contrib.date_payment"/></td>
+                                                    <td><span t-field="contrib.type"/></td>
+                                                    <td class="fw-bold"><span t-esc="contrib.amount"/> €</td>
+                                                    <td class="text-success small"><span t-esc="contrib.tax_deduction"/> €</td>
+                                                    <td>
+                                                        <span t-if="contrib.fiscal_receipt_number" class="badge bg-success-subtle text-success-emphasis">
+                                                            📄 <span t-esc="contrib.fiscal_receipt_number"/>
+                                                        </span>
+                                                        <span t-else="" class="text-muted small">En cours</span>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalRequestRdv" tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="/my/appointment/create" method="post" class="modal-content rounded-4 border-0">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title fw-bold">📅 Demander un Rendez-vous</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Motif de la séance *</label>
+                                <input type="text" name="name" class="form-control" required="required" placeholder="Ex: Guidance parentale, Échange..."/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Date et heure souhaitées *</label>
+                                <input type="datetime-local" name="date_start" class="form-control" required="required"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">État émotionnel actuel de l'enfant</label>
+                                <select name="child_energy_level" class="form-select">
+                                    <option value="calm">Calme / Réceptif 💚</option>
+                                    <option value="anxious">Anxiété / Stress 💛</option>
+                                    <option value="overstimulated">Surcharge sensorielle / Fatigué 🧡</option>
+                                    <option value="crisis">En crise / Besoin d'espace apaisant ❤️</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Besoins spécifiques pour le jour-J</label>
+                                <textarea name="specific_needs_this_day" class="form-control" rows="2" placeholder="Ex: Prévoir un endroit calme..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="submit" class="btn btn-primary rounded-pill w-100 fw-bold">Envoyer la demande</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalJournal" tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="/my/journal/create" method="post" class="modal-content rounded-4 border-0">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="beneficiary_id" t-att-value="beneficiary.id if beneficiary else 0"/>
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title fw-bold">📖 Nouvelle page du Journal</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Qualité du sommeil</label>
+                                <select name="sleep_quality" class="form-select">
+                                    <option value="good">Sommeil réparateur / Calme 😴</option>
+                                    <option value="restless">Sommeil agité / Réveils nocturnes 🌤️</option>
+                                    <option value="bad">Nuit très difficile / Insomnie 🚨</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Niveau d'anxiété</label>
+                                <select name="global_anxiety" class="form-select">
+                                    <option value="low">Paisible / Réceptif 🟢</option>
+                                    <option value="medium">Anxiété modérée / Agité 🟡</option>
+                                    <option value="high">Forte surcharge émotionnelle 🔴</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Les victoires du jour 🎉</label>
+                                <textarea name="victory_notes" class="form-control" rows="2" placeholder="Les réussites, même petites..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Difficultés rencontrées 🧠</label>
+                                <textarea name="challenge_notes" class="form-control" rows="2" placeholder="Ce qui a été difficile..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="submit" class="btn btn-primary rounded-pill w-100 fw-bold">Enregistrer dans le journal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div t-if="is_volunteer" class="modal fade" id="modalTimesheet" tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="/my/timesheet/create" method="post" class="modal-content rounded-4 border-0">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title fw-bold">⏱️ Déclarer mes heures de bénévolat</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Date de l'action</label>
+                                <input type="date" name="date" class="form-control" required="required"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Temps passé (en heures)</label>
+                                <input type="number" step="0.5" name="time_spent" class="form-control" value="1.0" required="required"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Action menée *</label>
+                                <input type="text" name="description" class="form-control" required="required" placeholder="Ex: Animation atelier, permanence écoute..."/>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="submit" class="btn btn-success rounded-pill w-100 fw-bold">Valider mes heures</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+<!-- MODALE : ENRICHIR LE DOSSIER DE L'ENFANT -->
+<div t-if="beneficiary" class="modal fade" id="modalUpdateProfile" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/my/profile/update" method="post" class="modal-content rounded-4 border-0">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">🧒 Enrichir le dossier de mon enfant</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Prénom de l'enfant</label>
+                        <input type="text" name="child_firstname" class="form-control" t-att-value="beneficiary.child_firstname"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Date de naissance</label>
+                        <input type="date" name="date_of_birth" class="form-control" t-att-value="beneficiary.date_of_birth"/>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Genre (pour l'avatar)</label>
+                    <select name="default_avatar_type" class="form-select">
+                        <option value="boy" t-att-selected="beneficiary.default_avatar_type == 'boy'">Garçon 👦</option>
+                        <option value="girl" t-att-selected="beneficiary.default_avatar_type == 'girl'">Fille 👧</option>
+                        <option value="neutral" t-att-selected="beneficiary.default_avatar_type == 'neutral'">Neutre 🌟</option>
+                    </select>
+                </div>
+
+                <div class="form-check form-switch mb-3 p-3 bg-light rounded-3">
+                    <input class="form-check-input ms-0 me-2" type="checkbox" name="has_sensory_sensitivity" id="checkSensory" t-att-checked="beneficiary.has_sensory_sensitivity"/>
+                    <label class="form-check-label fw-semibold" for="checkSensory">
+                        🎧 Mon enfant a une sensibilité sensorielle (bruit, lumière...)
+                    </label>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">🌟 Centres d'intérêt / Passions (Hyperfocus)</label>
+                    <input type="text" name="interests_or_hyperfocus" class="form-control" t-att-value="beneficiary.interests_or_hyperfocus" placeholder="Ex: Les trains, les dinosaures, la musique..."/>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">📝 Notes &amp; besoins spécifiques</label>
+                    <textarea name="association_notes" class="form-control" rows="3"><t t-esc="beneficiary.association_notes"/></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="submit" class="btn btn-primary rounded-pill w-100 fw-bold">Enregistrer les informations</button>
+            </div>
+        </form>
+    </div>
+</div>
+        </t>
+    </template>
+
+</odoo>
