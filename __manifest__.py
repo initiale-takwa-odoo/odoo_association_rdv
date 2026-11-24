@@ -4,7 +4,7 @@
     'version': '1.0',
     'summary': "Organisation des rendez-vous et suivi des bénéficiaires de l'association",
     'category': 'Humanitarian',
-    'author': 'Takwa Freelance',
+    'author': 'Ajili Takwa (Freelance)',
     'depends': [
         'base', 
         'web', 

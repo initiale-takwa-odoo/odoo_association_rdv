@@ -321,73 +321,131 @@
     </record>
 
 <!-- ================================================================-->
-<!-- 🎭 V. GESTION DES ATELIERS & ACTIVITÉS (association.activity)  -->
+<!-- 🎭 V. GESTION DES ATELIERS & ACTIVITÉS (association.activity) -->
 <!-- ===============================================================-->
 
-    <!-- 1. VUE LISTE ATELIERS -->
-    <record id="view_association_activity_tree" model="ir.ui.view">
-        <field name="name">association.activity.list</field>
-        <field name="model">association.activity</field>
-        <field name="arch" type="xml">
-            <list string="Liste des Ateliers" sample="1">
-            <!-- Remplacement de font_weight (déprécié) par une classe Bootstrap propre à Odoo 19 -->
+<!-- 1. VUE LISTE ATELIERS -->
+<record id="view_association_activity_tree" model="ir.ui.view">
+    <field name="name">association.activity.list</field>
+    <field name="model">association.activity</field>
+    <field name="arch" type="xml">
+        <list string="Liste des Ateliers" sample="1">
             <field name="name" class="fw-bold" width="200px"/>
+            <field name="date_start" string="Date &amp; Heure" width="160px"/>
+            <field name="participant_count" string="Inscrits" class="text-center" width="80px"/>
             <field name="capacity" string="Places Max" class="text-center" width="100px"/>
+            <field name="waitlist_count" string="En attente" class="text-center text-warning fw-bold" width="90px"/>
             <field name="beneficiary_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit_color': True}" string="Participants inscrits"/>
-            </list>
-        </field>
-    </record>
+        </list>
+    </field>
+</record>
 
-    <!-- 2. VUE FORMULAIRE ATELIERS -->
-    <record id="view_association_activity_form" model="ir.ui.view">
-        <field name="name">association.activity.form</field>
-        <field name="model">association.activity</field>
-        <field name="arch" type="xml">
-            <form string="Atelier / Activité">
-                <sheet class="shadow-sm border-0 rounded-3 p-4">
-                    <div class="row align-items-center mb-5 pb-3 border-bottom">
-                        <div class="col">
-                            <div class="oe_title">
-                                <label for="name" class="text-uppercase small fw-semibold text-muted mb-1 d-block" string="Nom de l'atelier"/>
-                                <h1 class="display-6 fw-bold"><field name="name" placeholder="Ex: Groupe de parole Mamans, Éveil Sensoriel..." class="w-100 border-0 border-bottom bg-transparent py-1"/></h1>
+<!-- 2. VUE FORMULAIRE ATELIERS -->
+<record id="view_association_activity_form" model="ir.ui.view">
+    <field name="name">association.activity.form</field>
+    <field name="model">association.activity</field>
+    <field name="arch" type="xml">
+        <form string="Atelier / Activité">
+            <sheet class="shadow-sm border-0 rounded-3 p-4">
+                <div class="row align-items-center mb-4 pb-3 border-bottom">
+                    <div class="col">
+                        <div class="oe_title">
+                            <label for="name" class="text-uppercase small fw-semibold text-muted mb-1 d-block" string="Nom de l'atelier"/>
+                            <h1 class="display-6 fw-bold mb-3">
+                                <field name="name" placeholder="Ex: Groupe de parole Mamans, Éveil Sensoriel..." class="w-100 border-0 border-bottom bg-transparent py-1"/>
+                            </h1>
+                        </div>
+                        
+                        <!-- Bloc Date et Heure de la session -->
+                        <div class="d-flex flex-wrap align-items-center gap-3 text-muted">
+                            <div class="d-flex align-items-center bg-light px-3 py-2 rounded-3 border">
+                                <i class="fa fa-calendar text-primary me-2"/>
+                                <span class="fw-semibold me-2">Du :</span>
+                                <field name="date_start" class="fw-bold text-dark"/>
+                            </div>
+                            <div class="d-flex align-items-center bg-light px-3 py-2 rounded-3 border">
+                                <i class="fa fa-clock-o text-primary me-2"/>
+                                <span class="fw-semibold me-2">Au :</span>
+                                <field name="date_end" class="fw-bold text-dark" placeholder="Optionnel..."/>
                             </div>
                         </div>
-                        <!-- Capacité isolée à droite de manière graphique -->
-                        <div class="col-auto text-end">
-                            <div class="p-3 bg-light rounded-3 text-center border-top border-primary border-3 shadow-sm">
-                                <span class="small text-muted text-uppercase d-block fw-semibold mb-1">Capacité d'accueil</span>
-                                <h3 class="m-0 fw-bold text-primary">
-                                <field name="capacity" class="w-25 text-center bg-transparent border-0 d-inline-block"/> 
-                                <span class="fs-6 text-muted fw-normal">places</span></h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-5">
-                        <label for="description" class="fw-bold text-muted mb-2"><i class="fa fa-info-circle me-2"/>Objectifs de l'atelier &amp; matériel à prévoir</label>
-                        <field name="description" placeholder="Décrivez le déroulement, le matériel nécessaire..." nolabel="1" class="form-control rounded-3 p-3"/>
                     </div>
                     
-                    <notebook class="mt-4">
-                        <page string="Familles Inscrites 🧒" name="participants" class="pt-4">
-                            <h5 class="fw-bold mb-4 text-muted"><i class="fa fa-child me-2"/>Liste des participants inscrits à cette session</h5>
-                            <div class="table-responsive rounded-3 border">
-                                <field name="beneficiary_ids" nolabel="1" placeholder="Ajouter des mamans/enfants à cet atelier...">
-                                    <!-- Inclusion d'une sous-vue liste épurée pour éviter le gros bloc m2m par défaut -->
-                                    <list string="Participants" editable="bottom">
-                                        <field name="name" string="Nom de famille"/>
-                                        <field name="child_firstname" string="Prénom Enfant"/>
-                                        <field name="phone"/>
-                                        <field name="association_category" widget="badge"/>
-                                    </list>
-                                </field>
-                            </div>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
+                    <!-- Capacité et compteur isolés à droite -->
+                    <div class="col-auto text-end">
+                        <div class="p-3 bg-light rounded-3 text-center border-top border-primary border-3 shadow-sm">
+                            <span class="small text-muted text-uppercase d-block fw-semibold mb-1">Taux de remplissage</span>
+                            <h3 class="m-0 fw-bold text-primary">
+                                <field name="participant_count" class="d-inline-block"/> / 
+                                <field name="capacity" class="w-25 text-center bg-transparent border-0 d-inline-block"/>
+                                <span class="fs-6 text-muted fw-normal">places</span>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label for="description" class="fw-bold text-muted mb-2">
+                        <i class="fa fa-info-circle me-2"/>Objectifs de l'atelier &amp; matériel à prévoir
+                    </label>
+                    <field name="description" placeholder="Décrivez le déroulement, le matériel nécessaire..." nolabel="1" class="form-control rounded-3 p-3"/>
+                </div>
+
+                <notebook class="mt-4">
+                    <!-- ONGLET 1 : INSCRITS -->
+                    <page string="Familles Inscrites 🧒" name="participants" class="pt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold m-0 text-muted">
+                                <i class="fa fa-child me-2"/>Liste des participants confirmés
+                            </h5>
+                            <span class="badge text-bg-danger p-2" invisible="participant_count &lt; capacity">
+                                Atelier Complet (Les prochains iront en liste d'attente)
+                            </span>
+                        </div>
+
+                        <div class="table-responsive rounded-3 border">
+                            <field name="beneficiary_ids" nolabel="1" placeholder="Ajouter des mamans/enfants à cet atelier...">
+                                <list string="Participants" editable="bottom">
+                                    <field name="name" string="Nom de famille"/>
+                                    <field name="child_firstname" string="Prénom Enfant"/>
+                                    <field name="phone"/>
+                                    <field name="association_category" widget="badge"/>
+                                </list>
+                            </field>
+                        </div>
+                    </page>
+
+                    <!-- ONGLET 2 : LISTE D'ATTENTE -->
+                    <page string="Liste d'attente ⏳" name="waitlist" class="pt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold m-0 text-warning">
+                                <i class="fa fa-clock-o me-2"/>Familles en attente d'une place (<field name="waitlist_count" class="d-inline"/>)
+                            </h5>
+                            <button name="action_promote_from_waitlist" 
+                                    type="object" 
+                                    string="Inscrire le 1er de la liste" 
+                                    class="btn btn-sm btn-outline-primary"
+                                    invisible="waitlist_count == 0 or participant_count &gt;= capacity"/>
+                        </div>
+
+                        <div class="table-responsive rounded-3 border border-warning">
+                            <field name="waitlist_ids" nolabel="1">
+                                <list string="Liste d'attente" editable="bottom">
+                                    <field name="name" string="Nom de famille"/>
+                                    <field name="child_firstname" string="Prénom Enfant"/>
+                                    <field name="phone"/>
+                                    <field name="association_category" widget="badge"/>
+                                </list>
+                            </field>
+                        </div>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
 
     <!-- ======================================================== -->
     <!-- 🧸 VI. GESTION DE LA LUDOTHÈQUE (association.resource)  -->
