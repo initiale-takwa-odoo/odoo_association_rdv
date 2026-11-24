@@ -34,6 +34,37 @@ Une interface unique à onglets qui s'adapte dynamiquement au profil de l'utilis
 * **Frontend :** Templates QWeb Website & feuilles de style CSS personnalisées (`web.assets_frontend`).
 * **Sécurité :** Groupes utilisateurs dédiés (`security/association_security.xml`) et règles d'accès (`ir.model.access.csv`).
 
+## 📸 Aperçu de l'application
+
+### 1. Portail Web Public & Parcours d'Adhésion
+*Page d'accueil bienveillante présentant les pôles de l'association (Écoute, Ateliers Sensoriels, Ludothèque) et l'accès sécurisé.*
+![Accueil Espace Maman et Enfant](static/description/screenshots/accueil_web.png)
+
+### 2. Journal de Bord Évolutif & Renforcement Positif
+*Suivi quotidien personnalisé (sommeil, niveau d'anxiété) mettant l'accent sur les réussites et petites victoires de l'enfant.*
+![Journal de bord de l'enfant](static/description/screenshots/journal_bord.png)
+
+### 3. Gestion des Ateliers & Capacités d'Accueil
+*Organisation des groupes de parole (ex: Café Parents) avec suivi des participants et gestion des listes d'attente.*
+![Ateliers et Groupes](static/description/screenshots/ateliers.png)
+
+### 4. Planification & Calendrier Intelligent
+*Vue calendrier filtrable par famille, statut du rendez-vous et état émotionnel de l'enfant le jour de la séance.*
+![Calendrier des rendez-vous](static/description/screenshots/calendrier.png)
+
+### 5. Ludothèque Solidaire (Vue Kanban & Contrôles)
+*Suivi visuel en temps réel de l'état du matériel sensoriel (Disponible, Prêté, Hors d'usage) et de l'emprunteur actuel.*
+![Catalogue Kanban Ludothèque](static/description/screenshots/ludotheque_kanban.png)
+
+### 6. Sécurisation des Prêts (Wizard & Contraintes Métier)
+*Assistant de prêt intégrant un verrouillage automatique empêchant la double attribution d'un article déjà emprunté.*
+![Wizard de prêt sécurisé](static/description/screenshots/wizard_pret.png)
+
+### 7. Gestion Financière & Reçus Fiscaux
+*Suivi des cotisations annuelles et des dons avec calcul automatique de la déduction fiscale (66 %) et génération de reçu.*
+![Dons et reçu fiscal](static/description/screenshots/finances_don.png)
+
+
 ## 🚀 Installation
 
 1. Cloner ce dépôt dans votre répertoire `custom_addons` :
