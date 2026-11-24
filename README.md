@@ -58,6 +58,7 @@ Une interface unique à onglets qui s'adapte dynamiquement au profil de l'utilis
 
 ### 6. Sécurisation des Prêts (Wizard & Contraintes Métier)
 *Assistant de prêt intégrant un verrouillage automatique empêchant la double attribution d'un article déjà emprunté.*
+![Wizard de prêt sécurisé](static/description/screenshots/catalogue.png)
 ![Wizard de prêt sécurisé](static/description/screenshots/wizard_pret.png)
 
 ### 7. Gestion Financière & Reçus Fiscaux
